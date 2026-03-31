@@ -1,0 +1,218 @@
+<view class="container">
+  <!-- 背景图 -->
+  <image class="page-bg" src="/images/BackGround.png" mode="aspectFill"></image>
+
+  <!-- 顶部导航 -->
+  <view class="nav-bar">
+    <view class="nav-back" bindtap="goBack">
+      <text class="back-icon">←</text>
+    </view>
+    <text class="nav-title-text">数据统计</text>
+  </view>
+
+  <view class="content">
+    <!-- 总览卡片 -->
+    <view class="overview-card">
+      <view class="overview-title">总体概览</view>
+      <view class="overview-stats">
+        <view class="stat-box">
+          <text class="stat-num">{{overallStats.totalRoutes}}</text>
+          <text class="stat-text">总线路</text>
+        </view>
+        <view class="stat-box">
+          <text class="stat-num">{{overallStats.sendCount}}</text>
+          <text class="stat-text">已Send</text>
+        </view>
+        <view class="stat-box">
+          <text class="stat-num">{{overallStats.flashCount}}</text>
+          <text class="stat-text">Flash</text>
+        </view>
+        <view class="stat-box">
+          <text class="stat-num">{{overallStats.flashRate}}%</text>
+          <text class="stat-text">Flash率</text>
+        </view>
+      </view>
+      <view class="overview-sub">
+        <view class="sub-item">
+          <text class="sub-label">抱石平均尝试</text>
+          <text class="sub-value">{{overallStats.avgAttemptsBouldering || '-'}}</text>
+        </view>
+        <view class="sub-item">
+          <text class="sub-label">绳攀平均尝试</text>
+          <text class="sub-value">{{overallStats.avgAttemptsRope || '-'}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 类型选择器 -->
+    <view class="type-selector">
+      <view
+        wx:for="{{typeStats}}"
+        wx:key="type"
+        class="type-tab {{selectedType === item.type ? 'active' : ''}}"
+        bindtap="onTypeSelect"
+        data-type="{{item.type}}"
+      >
+        {{item.label}}
+        <text class="type-count" wx:if="{{item.totalCount > 0}}">({{item.totalCount}})</text>
+      </view>
+    </view>
+
+    <!-- 选中类型的详情 -->
+    <block wx:for="{{typeStats}}" wx:key="type" wx:if="{{selectedType === item.type}}">
+      <!-- 统计卡片 -->
+      <view class="detail-card">
+        <view class="detail-header" bindtap="toggleCollapse" data-key="data">
+          <text class="detail-title">{{item.label}}数据</text>
+          <text class="collapse-icon">{{collapsed.data ? '▼' : '▲'}}</text>
+        </view>
+        <view class="detail-content" wx:if="{{!collapsed.data}}">
+          <view class="detail-stats">
+            <view class="detail-stat">
+              <text class="detail-num">{{item.totalCount}}</text>
+              <text class="detail-label">线路数</text>
+            </view>
+            <view class="detail-stat">
+              <text class="detail-num">{{item.sendCount}}</text>
+              <text class="detail-label">已Send</text>
+            </view>
+            <view class="detail-stat">
+              <text class="detail-num">{{item.flashCount}}</text>
+              <text class="detail-label">Flash</text>
+            </view>
+            <view class="detail-stat">
+              <text class="detail-num">{{item.sendRate}}%</text>
+              <text class="detail-label">Send率</text>
+            </view>
+          </view>
+
+          <view class="detail-row">
+            <text class="row-label">Flash率</text>
+            <view class="progress-bar">
+              <view class="progress-fill flash" style="width: {{item.flashRate}}%"></view>
+            </view>
+            <text class="row-value">{{item.flashRate}}%</text>
+          </view>
+
+          <view class="detail-row" wx:if="{{item.totalCount > 0}}">
+            <text class="row-label">平均尝试</text>
+            <view class="attempts-display">
+              <text class="attempts-num">{{item.avgAttempts || '-'}}</text>
+              <text class="attempts-unit">次</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 热门难度 -->
+      <view class="detail-card" wx:if="{{item.topDifficulties.length > 0}}">
+        <view class="detail-header" bindtap="toggleCollapse" data-key="difficulty">
+          <text class="detail-title">热门难度 TOP{{item.topDifficulties.length}}</text>
+          <text class="collapse-icon">{{collapsed.difficulty ? '▼' : '▲'}}</text>
+        </view>
+        <view class="detail-content" wx:if="{{!collapsed.difficulty}}">
+          <view class="difficulty-list">
+            <view
+              wx:for="{{item.topDifficulties}}"
+              wx:for-item="diff"
+              wx:key="difficulty"
+              class="difficulty-item"
+            >
+              <text class="diff-name">{{diff.difficulty}}</text>
+              <view class="diff-bar">
+                <view class="diff-fill" style="width: {{diff.count / item.totalCount * 100}}%"></view>
+              </view>
+              <text class="diff-count">{{diff.count}}条</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 岩点分析 -->
+      <view class="detail-card" wx:if="{{item.holdStats.length > 0}}">
+        <view class="detail-header" bindtap="toggleCollapse" data-key="hold">
+          <text class="detail-title">岩点使用</text>
+          <text class="collapse-icon">{{collapsed.hold ? '▼' : '▲'}}</text>
+        </view>
+        <view class="detail-content" wx:if="{{!collapsed.hold}}">
+          <view class="hold-list">
+            <view
+              wx:for="{{item.holdStats}}"
+              wx:for-item="hold"
+              wx:key="hold"
+              class="hold-item"
+            >
+              <view class="hold-info">
+                <text class="hold-label">{{hold.subLabel}}</text>
+                <text class="hold-en">{{hold.label}}</text>
+              </view>
+              <view class="hold-bar">
+                <view class="hold-fill" style="width: {{hold.count / item.totalCount * 100}}%"></view>
+              </view>
+              <text class="hold-count">{{hold.count}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 风格统计（仅抱石显示） -->
+      <view class="detail-card" wx:if="{{item.type === 'bouldering' && item.styleStats.length > 0}}">
+        <view class="detail-header" bindtap="toggleCollapse" data-key="style">
+          <text class="detail-title">线路风格</text>
+          <text class="collapse-icon">{{collapsed.style ? '▼' : '▲'}}</text>
+        </view>
+        <view class="detail-content" wx:if="{{!collapsed.style}}">
+          <view class="style-list">
+            <view
+              wx:for="{{item.styleStats}}"
+              wx:for-item="style"
+              wx:key="style"
+              class="style-item"
+            >
+              <text class="style-label">{{style.label}}</text>
+              <view class="style-bar">
+                <view class="style-fill" style="width: {{style.count / item.totalCount * 100}}%"></view>
+              </view>
+              <text class="style-count">{{style.count}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 墙面风格统计 -->
+      <view class="detail-card" wx:if="{{item.wallStats.length > 0}}">
+        <view class="detail-header" bindtap="toggleCollapse" data-key="wall">
+          <text class="detail-title">墙面风格</text>
+          <text class="collapse-icon">{{collapsed.wall ? '▼' : '▲'}}</text>
+        </view>
+        <view class="detail-content" wx:if="{{!collapsed.wall}}">
+          <view class="wall-list">
+            <view
+              wx:for="{{item.wallStats}}"
+              wx:for-item="wall"
+              wx:key="wall"
+              class="wall-item"
+            >
+              <view class="wall-info">
+                <text class="wall-label">{{wall.subLabel}}</text>
+                <text class="wall-en">{{wall.label}}</text>
+              </view>
+              <view class="wall-bar">
+                <view class="wall-fill" style="width: {{wall.count / item.totalCount * 100}}%"></view>
+              </view>
+              <text class="wall-count">{{wall.count}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 无数据提示 -->
+      <view class="empty-tip" wx:if="{{item.totalCount === 0}}">
+        <text>暂无{{item.label}}记录</text>
+        <text class="empty-hint">开始记录你的{{item.label}}线路吧！</text>
+      </view>
+    </block>
+
+    <view class="bottom-space"></view>
+  </view>
+</view>

@@ -1,0 +1,293 @@
+<view class="container">
+  <!-- 背景图 -->
+  <image class="page-bg" src="/images/BackGround.png" mode="aspectFill"></image>
+  <!-- 顶部自定义导航 -->
+  <view class="nav-bar">
+    <text class="nav-title-text">攀岩手账</text>
+  </view>
+
+  <!-- 内容区域 -->
+  <scroll-view class="content" scroll-y>
+
+    <!-- 个人汇总卡片 -->
+    <view class="summary-card" bindtap="toggleForm">
+      <view class="summary-header">
+        <text class="summary-title">个人汇总</text>
+        <text class="toggle-icon">{{showForm ? '▲' : '▼'}}</text>
+      </view>
+      <view class="summary-stats">
+        <view class="stat-item">
+          <text class="stat-value">{{stats.totalRoutes}}</text>
+          <text class="stat-label">总线路</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-value">{{stats.flashRate}}%</text>
+          <text class="stat-label">Flash率</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-value">{{stats.flashCount || 0}}</text>
+          <text class="stat-label">Flash次数</text>
+        </view>
+      </view>
+      <view class="summary-stats">
+        <view class="stat-item">
+          <text class="stat-value">{{stats.avgAttemptsBouldering || '-'}}</text>
+          <text class="stat-label">抱石平均</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-value">{{stats.avgAttemptsRope || '-'}}</text>
+          <text class="stat-label">绳攀平均</text>
+        </view>
+      </view>
+      <view class="summary-analysis" wx:if="{{strengths.length > 0}}">
+        <view class="analysis-section">
+          <text class="analysis-label">擅长岩点：</text>
+          <text class="analysis-value">{{strengths[0].subLabel}}{{strengths.length > 1 ? ' / ' + strengths[1].subLabel : ''}}{{strengths.length > 2 ? ' / ' + strengths[2].subLabel : ''}}</text>
+        </view>
+      </view>
+      <view class="summary-empty" wx:if="{{stats.totalRoutes === 0}}">
+        <text>暂无数据，开始记录你的第一条线路吧！</text>
+      </view>
+    </view>
+
+    <!-- 记录表单 -->
+    <view class="form-card" wx:if="{{showForm}}">
+      <view class="form-title">记录线路</view>
+
+      <!-- 攀岩类型 -->
+      <view class="form-section">
+        <view class="form-label">攀岩类型</view>
+        <view class="type-list">
+          <view
+            wx:for="{{climbingTypes}}"
+            wx:key="value"
+            class="type-item {{selectedType === item.value ? 'active' : ''}}"
+            bindtap="onTypeChange"
+            data-value="{{item.value}}"
+          >
+            {{item.label}}
+          </view>
+        </view>
+      </view>
+
+      <!-- 难度体系（非抱石） -->
+      <view class="form-section" wx:if="{{selectedType !== 'bouldering'}}">
+        <view class="form-label">难度体系</view>
+        <view class="system-list">
+          <view
+            wx:for="{{difficultySystems}}"
+            wx:key="value"
+            class="system-item {{selectedSystem === item.value ? 'active' : ''}}"
+            bindtap="onSystemChange"
+            data-value="{{item.value}}"
+          >
+            {{item.label}}
+          </view>
+        </view>
+      </view>
+
+      <!-- 难度等级 -->
+      <view class="form-section">
+        <view class="form-label">难度等级</view>
+        <scroll-view class="difficulty-scroll" scroll-x>
+          <view class="difficulty-list">
+            <view
+              wx:for="{{difficultyOptions}}"
+              wx:key="*this"
+              class="difficulty-item {{selectedDifficulty === item ? 'active' : ''}}"
+              bindtap="onDifficultyChange"
+              data-value="{{item}}"
+            >
+              {{item}}
+            </view>
+          </view>
+        </scroll-view>
+      </view>
+
+      <!-- 岩点类型 -->
+      <view class="form-section">
+        <view class="form-label">岩点类型（可多选）</view>
+        <view class="hold-list">
+          <view
+            wx:for="{{holdOptionsWithSelected}}"
+            wx:key="value"
+            class="hold-item {{item.selected ? 'active' : ''}}"
+            bindtap="onHoldToggle"
+            data-value="{{item.value}}"
+          >
+            <text class="hold-label">{{item.label}}</text>
+            <text class="hold-sublabel">{{item.subLabel}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 线路风格（仅抱石显示） -->
+      <view class="form-section" wx:if="{{selectedType === 'bouldering'}}">
+        <view class="form-label">线路风格</view>
+        <view class="style-list">
+          <view
+            wx:for="{{routeStyles}}"
+            wx:key="value"
+            class="style-item {{selectedStyle === item.value ? 'active' : ''}}"
+            bindtap="onStyleChange"
+            data-value="{{item.value}}"
+          >
+            {{item.label}}
+          </view>
+        </view>
+      </view>
+
+      <!-- 墙面风格 -->
+      <view class="form-section">
+        <view class="form-label">墙面风格</view>
+        <view class="wall-list">
+          <view
+            wx:for="{{wallStyles}}"
+            wx:key="value"
+            class="wall-item {{selectedWallStyle === item.value ? 'active' : ''}}"
+            bindtap="onWallStyleChange"
+            data-value="{{item.value}}"
+          >
+            {{item.subLabel}}
+          </view>
+        </view>
+      </view>
+
+      <!-- 场馆 -->
+      <view class="form-section">
+        <view class="form-label">场馆（选填）</view>
+        <input
+          class="gym-input"
+          placeholder="请输入场馆名称"
+          value="{{gym}}"
+          bindinput="onGymInput"
+        />
+      </view>
+
+      <!-- Flash状态 -->
+      <view class="form-section">
+        <view class="form-label">完攀状态</view>
+        <view class="type-list">
+          <view class="type-item {{isFlash ? 'active' : ''}}" bindtap="onFlashToggle" data-value="flash">Flash</view>
+          <view class="type-item {{!isFlash && !isProject ? 'active' : ''}}" bindtap="onSendToggle">已Send</view>
+          <view class="type-item {{isProject ? 'active' : ''}}" bindtap="onProjectToggle">Project</view>
+        </view>
+      </view>
+
+      <!-- 尝试次数（未Flash时显示） -->
+      <view class="form-section" wx:if="{{!isFlash}}">
+        <view class="form-label">尝试次数</view>
+        <view class="attempts-input">
+          <view class="attempts-btn" bindtap="onAttemptsDecrease">-</view>
+          <text class="attempts-value">{{attempts}}</text>
+          <view class="attempts-btn" bindtap="onAttemptsIncrease">+</view>
+        </view>
+      </view>
+
+      <!-- 备注 -->
+      <view class="form-section">
+        <view class="form-label">备注（可选）</view>
+        <input
+          class="gym-input"
+          placeholder="添加备注..."
+          value="{{notes}}"
+          bindinput="onNotesInput"
+        />
+      </view>
+
+      <!-- 保存按钮 -->
+      <button class="save-btn" bindtap="onSaveRoute">{{isProject ? '保存为Project' : (isFlash ? '保存Flash' : '保存Send')}}</button>
+    </view>
+
+    <!-- Project区域 -->
+    <view class="history-section" wx:if="{{projects.length > 0}}">
+      <view class="history-title">Project</view>
+      <view class="history-list">
+        <view
+          wx:for="{{projects}}"
+          wx:key="id"
+          class="history-item"
+        >
+          <view class="history-header">
+            <text class="history-type">{{item.type === 'bouldering' ? '抱石' : item.type === 'toprope' ? '顶绳' : item.type === 'lead' ? '先锋' : '自动绳降'}}</text>
+            <text class="history-difficulty">{{item.difficulty}}</text>
+            <view class="history-flash-status project-attempts">
+              <view class="project-attempts-btn" catchtap="onProjectAttemptsDecrease" data-id="{{item.id}}">-</view>
+              <text class="project-attempts-value">{{item.attempts}}次</text>
+              <view class="project-attempts-btn" catchtap="onProjectAttemptsIncrease" data-id="{{item.id}}">+</view>
+            </view>
+          </view>
+          <view class="history-details">
+            <text class="history-style" wx:if="{{item.type === 'bouldering' && item.style}}">{{item.style === 'dynamic' ? '动态' : item.style === 'static' ? '静态' : '平衡线'}}</text>
+            <text class="history-wall">{{item.wallStyle === 'face' ? '面攀' : item.wallStyle === 'crack' ? '裂缝' : item.wallStyle === 'slab' ? '平板' : item.wallStyle === 'vertical' ? '垂直' : item.wallStyle === 'overhang' ? '悬岩' : item.wallStyle === 'arete' ? '刃脊' : item.wallStyle === 'dihedral' ? '内角' : '烟囱'}}</text>
+            <text class="history-gym" wx:if="{{item.gym}}">{{item.gym}}</text>
+            <text class="history-notes" wx:if="{{item.notes}}">{{item.notes}}</text>
+          </view>
+          <view class="history-footer">
+            <text class="history-date">{{item.formattedDate}}</text>
+            <text class="history-send-btn" catchtap="onProjectSend" data-id="{{item.id}}">Send</text>
+            <text class="history-delete" catchtap="onDeleteRoute" data-id="{{item.id}}">删除</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 线路历史 - 已完成 -->
+    <view class="history-section">
+      <view class="history-title">已完成</view>
+      <view class="history-list" wx:if="{{routes.length > 0}}">
+        <view
+          wx:for="{{routes}}"
+          wx:key="id"
+          class="history-item"
+        >
+          <view class="history-header">
+            <text class="history-type">{{item.type === 'bouldering' ? '抱石' : item.type === 'toprope' ? '顶绳' : item.type === 'lead' ? '先锋' : '自动绳降'}}</text>
+            <text class="history-difficulty">{{item.difficulty}}</text>
+            <view class="history-flash-status">
+              <text wx:if="{{item.flash}}" class="flash-tag">Flash</text>
+              <text wx:else class="send-tag">{{item.attempts}}次</text>
+            </view>
+          </view>
+          <view class="history-details">
+            <text class="history-style" wx:if="{{item.type === 'bouldering' && item.style}}">{{item.style === 'dynamic' ? '动态' : item.style === 'static' ? '静态' : '平衡线'}}</text>
+            <text class="history-wall">{{item.wallStyle === 'face' ? '面攀' : item.wallStyle === 'crack' ? '裂缝' : item.wallStyle === 'slab' ? '平板' : item.wallStyle === 'vertical' ? '垂直' : item.wallStyle === 'overhang' ? '悬岩' : item.wallStyle === 'arete' ? '刃脊' : item.wallStyle === 'dihedral' ? '内角' : '烟囱'}}</text>
+            <text class="history-gym" wx:if="{{item.gym}}">{{item.gym}}</text>
+            <text class="history-notes" wx:if="{{item.notes}}">{{item.notes}}</text>
+          </view>
+          <view class="history-holds" wx:if="{{item.holds.length > 0}}">
+            <text wx:for="{{item.holds}}" wx:for-item="hold" wx:key="*this" class="hold-tag">
+              {{hold === 'mantle' ? '掌压' : hold === 'jug' ? '把手' : hold === 'crimp' ? '抠点' : hold === 'sloper' ? '斜面' : hold === 'pinch' ? '捏点' : hold === 'pocket' ? '洞点' : hold === 'gaston' ? '反抓' : '反抠'}}
+            </text>
+          </view>
+          <view class="history-footer">
+            <text class="history-date">{{item.formattedDate}}</text>
+            <text class="history-delete" catchtap="onDeleteRoute" data-id="{{item.id}}">删除</text>
+          </view>
+        </view>
+      </view>
+      <view class="history-empty" wx:else>
+        <text>暂无已完成的记录</text>
+      </view>
+    </view>
+
+    <!-- 底部占位 -->
+    <view class="bottom-space"></view>
+  </scroll-view>
+
+  <!-- 右下角菜单按钮 -->
+  <view class="menu-btn" bindtap="toggleMenu">
+    <text class="menu-icon">☰</text>
+  </view>
+
+  <!-- 菜单弹窗 -->
+  <view class="menu-overlay" wx:if="{{showMenu}}" bindtap="hideMenu"></view>
+  <view class="menu-popup {{showMenu ? 'show' : ''}}">
+    <view class="menu-item" bindtap="goToEquipment">
+      <text>装备管理</text>
+    </view>
+    <view class="menu-item" bindtap="goToStats">
+      <text>数据统计</text>
+    </view>
+  </view>
+</view>

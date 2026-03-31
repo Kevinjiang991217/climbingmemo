@@ -1,0 +1,678 @@
+// 攀岩账本首页样式
+
+@primary-color: #8d4ad9;
+@success-color: #52c41a;
+@warning-color: #faad14;
+@danger-color: #ff4d4f;
+@bg-color: #f5f5f5;
+@card-bg: #ffffff;
+@text-color: #333;
+@text-light: #666;
+@border-color: #e8e8e8;
+
+page {
+  height: 100vh;
+  background-color: @bg-color;
+}
+
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.page-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.6;
+  z-index: -1;
+}
+
+// 导航栏
+.nav-bar {
+  height: 88px;
+  padding-top: 44px;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: none;
+  position: relative;
+  z-index: 10;
+}
+
+.nav-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: @text-color;
+  position: relative;
+  z-index: 10;
+}
+
+.nav-title-text {
+  font-size: 30px;
+  font-weight: 700;
+  color: #ffffff;
+  position: relative;
+  z-index: 10;
+  margin-top: -20px;
+  padding: 8px 24px;
+  background: linear-gradient(135deg, #8d4ad986, #6b3ab0);
+  border-radius: 30px;
+  box-shadow: 0 4px 12px rgba(141, 74, 217, 0.4);
+}
+
+.nav-title-img {
+  height: 40px;
+  width: auto;
+  display: block;
+  opacity: 1;
+}
+
+// 内容区域
+.content {
+  flex: 1;
+  padding: 16px;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+}
+
+// 汇总卡片
+.summary-card {
+  background: @card-bg;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.summary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.summary-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: @text-color;
+}
+
+.toggle-icon {
+  font-size: 12px;
+  color: @text-light;
+}
+
+.summary-stats {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 12px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 600;
+  color: @primary-color;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: @text-light;
+}
+
+.summary-analysis {
+  padding-top: 12px;
+  border-top: 1px solid @border-color;
+}
+
+.analysis-section {
+  margin-bottom: 4px;
+}
+
+.analysis-label {
+  font-size: 12px;
+  color: @text-light;
+}
+
+.analysis-value {
+  font-size: 12px;
+  font-weight: 500;
+  color: @success-color;
+
+  &.warning {
+    color: @warning-color;
+  }
+}
+
+.summary-empty {
+  padding-top: 8px;
+  font-size: 12px;
+  color: @text-light;
+}
+
+// 表单卡片
+.form-card {
+  background: @card-bg;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.form-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: @text-color;
+  margin-bottom: 16px;
+}
+
+.form-section {
+  margin-bottom: 16px;
+}
+
+.form-label {
+  font-size: 14px;
+  color: @text-light;
+  margin-bottom: 8px;
+}
+
+// 攀岩类型选择
+.type-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.type-item {
+  padding: 6px 12px;
+  background: @bg-color;
+  border-radius: 16px;
+  font-size: 13px;
+  color: @text-color;
+  border: 1px solid transparent;
+
+  &.active {
+    background: rgba(141, 74, 217, 0.1);
+    color: @primary-color;
+    border-color: @primary-color;
+  }
+}
+
+// 难度体系
+.system-list {
+  display: flex;
+  gap: 8px;
+}
+
+.system-item {
+  padding: 6px 16px;
+  background: @bg-color;
+  border-radius: 4px;
+  font-size: 13px;
+  color: @text-color;
+  border: 1px solid transparent;
+
+  &.active {
+    background: rgba(141, 74, 217, 0.1);
+    color: @primary-color;
+    border-color: @primary-color;
+  }
+}
+
+// 难度等级滚动
+.difficulty-scroll {
+  width: 100%;
+  white-space: nowrap;
+}
+
+.difficulty-list {
+  display: inline-flex;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.difficulty-item {
+  padding: 8px 12px;
+  background: @bg-color;
+  border-radius: 4px;
+  font-size: 13px;
+  color: @text-color;
+  flex-shrink: 0;
+  border: 1px solid transparent;
+
+  &.active {
+    background: rgba(141, 74, 217, 0.1);
+    color: @primary-color;
+    border-color: @primary-color;
+  }
+}
+
+// 岩点类型
+.hold-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.hold-item {
+  padding: 8px 4px;
+  background: @bg-color;
+  border-radius: 8px;
+  font-size: 11px;
+  color: @text-color;
+  text-align: center;
+  border: 1px solid transparent;
+  display: grid;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hold-item.active {
+  background: rgba(141, 74, 217, 0.1) !important;
+  color: @primary-color !important;
+  border-color: @primary-color !important;
+}
+
+.hold-label {
+  font-weight: 500;
+}
+
+.hold-sublabel {
+  font-size: 15px;
+  opacity: 0.7;
+}
+
+// 线路风格
+.style-list {
+  display: flex;
+  gap: 8px;
+}
+
+.style-item {
+  padding: 8px 16px;
+  background: @bg-color;
+  border-radius: 4px;
+  font-size: 13px;
+  color: @text-color;
+  border: 1px solid transparent;
+
+  &.active {
+    background: rgba(141, 74, 217, 0.1);
+    color: @primary-color;
+    border-color: @primary-color;
+  }
+}
+
+// 墙面风格
+.wall-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.wall-item {
+  padding: 8px 16px;
+  background: @bg-color;
+  border-radius: 4px;
+  font-size: 13px;
+  color: @text-color;
+
+  &.active {
+    background: rgba(148, 74, 217, 0.1);
+    color: @primary-color;
+    border: 1px solid @primary-color;
+  }
+}
+
+// 场馆输入
+.gym-input {
+  width: 100%;
+  padding: 12px 12px;
+  background: @bg-color;
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
+  min-height: 44px;
+}
+
+// 成功状态切换
+.success-toggle {
+  display: inline-flex;
+  padding: 8px 20px;
+  background: @bg-color;
+  border-radius: 4px;
+  font-size: 14px;
+  color: @text-color;
+
+  &.active {
+    background: rgba(82, 196, 26, 0.1);
+    color: @success-color;
+  }
+}
+
+// 尝试次数输入
+.attempts-input {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.attempts-btn {
+  width: 36px;
+  height: 36px;
+  background: @bg-color;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: @primary-color;
+}
+
+.attempts-value {
+  font-size: 18px;
+  font-weight: 600;
+  color: @text-color;
+  min-width: 30px;
+  text-align: center;
+}
+
+// 备注
+.history-notes {
+  font-size: 12px;
+  color: @text-light;
+  font-style: italic;
+}
+
+// 历史记录 Flash 状态
+.history-flash-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.flash-tag {
+  padding: 2px 6px;
+  background: rgba(82, 196, 26, 0.15);
+  color: @success-color;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.send-tag {
+  padding: 2px 6px;
+  background: rgba(141, 74, 217, 0.15);
+  color: @primary-color;
+  border-radius: 4px;
+  font-size: 10px;
+}
+
+.attempts-tag {
+  padding: 2px 6px;
+  background: @bg-color;
+  color: @text-light;
+  border-radius: 4px;
+  font-size: 10px;
+}
+
+.history-send {
+  margin-left: auto;
+  padding: 2px 8px;
+  background: rgba(250, 173, 20, 0.15);
+  color: @warning-color;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+// Project 尝试次数
+.project-attempts {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.project-attempts-btn {
+  width: 20px;
+  height: 20px;
+  background: @bg-color;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: @primary-color;
+}
+
+.project-attempts-value {
+  font-size: 11px;
+  color: @text-light;
+  min-width: 24px;
+  text-align: center;
+}
+
+.history-send-btn {
+  padding: 2px 8px;
+  background: rgba(250, 173, 20, 0.15);
+  color: @warning-color;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+// 保存按钮
+.save-btn {
+  width: 100%;
+  margin-top: 16px;
+  padding: 12px;
+  background: @primary-color;
+  color: #fff;
+  border-radius: 8px;
+  font-size: 16px;
+  border: none;
+
+  &::after {
+    border: none;
+  }
+}
+
+// 历史记录
+.history-section {
+  margin-top: 8px;
+}
+
+.history-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: @text-color;
+  margin-bottom: 12px;
+  text-shadow:
+    -1px -1px 0 #ffffff,
+    1px -1px 0 #ffffff, 
+    -1px 1px 0 #ffffff,
+    1px 1px 0 #ffffff
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.history-item {
+  background: @card-bg;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.history-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.history-type {
+  padding: 2px 8px;
+  background: rgba(141, 74, 217, 0.1);
+  color: @primary-color;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.history-difficulty {
+  font-size: 16px;
+  font-weight: 600;
+  color: @text-color;
+}
+
+.history-success {
+  margin-left: auto;
+  font-size: 14px;
+
+  &.success {
+    color: @success-color;
+  }
+
+  &.fail {
+    color: @danger-color;
+  }
+}
+
+.history-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 12px;
+  color: @text-light;
+  margin-bottom: 6px;
+}
+
+.history-holds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 6px;
+}
+
+.hold-tag {
+  padding: 1px 6px 5px 6px;
+  background: @bg-color;
+  border-radius: 4px;
+  font-size: 9px;
+  color: @text-light;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.history-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 6px;
+  border-top: 1px solid @border-color;
+}
+
+.history-date {
+  font-size: 11px;
+  color: @text-light;
+}
+
+.history-delete {
+  font-size: 12px;
+  color: @danger-color;
+}
+
+.history-empty {
+  text-align: center;
+  padding: 32px;
+  color: @text-light;
+  font-size: 14px;
+}
+
+// 底部占位
+.bottom-space {
+  height: 80px;
+}
+
+// 右下角菜单按钮
+.menu-btn {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  width: 50px;
+  height: 50px;
+  background: @primary-color;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(74, 144, 217, 0.4);
+  z-index: 100;
+}
+
+.menu-icon {
+  font-size: 20px;
+  color: #fff;
+}
+
+// 菜单遮罩
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 200;
+}
+
+// 菜单弹窗
+.menu-popup {
+  position: fixed;
+  right: 20px;
+  bottom: 80px;
+  background: @card-bg;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  z-index: 201;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.2s ease;
+  pointer-events: none;
+
+  &.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+}
+
+.menu-item {
+  padding: 14px 20px;
+  font-size: 14px;
+  color: @text-color;
+  border-bottom: 1px solid @border-color;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &.disabled {
+    color: @text-light;
+  }
+}
